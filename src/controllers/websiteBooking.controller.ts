@@ -1,0 +1,70 @@
+import { Request, Response } from 'express';
+import { websiteBookingService } from '../services/websiteBooking.service';
+
+export class WebsiteBookingController {
+    submitBooking = async (req: Request, res: Response): Promise<void> => {
+        // Extract branch from req.body
+        const { name, sex, dateOfBirth, phoneNumber, email, address, hmo, branch, requestedAppointmentDate, complaint } = req.body;
+
+        if (!name || !phoneNumber) {
+            res.status(400).json({ error: 'Name and phone number are required.' });
+            return;
+        }
+
+        try {
+            const bookingData = {
+                name, sex, phoneNumber, email, address, hmo, branch, complaint, // Added branch here
+                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+                requestedAppointmentDate: requestedAppointmentDate ? new Date(requestedAppointmentDate) : null,
+            };
+            
+            const newBooking = await websiteBookingService.createBooking(bookingData as any);
+            
+            res.status(201).json({ message: 'Booking request submitted successfully.', bookingId: newBooking.id });
+        } catch (error: any) {
+            console.error('Error submitting website booking:', error);
+            res.status(500).json({ error: 'Server error during booking submission.' });
+        }
+    };
+
+    getAllBookings = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const bookings = await websiteBookingService.getAllBookings();
+            res.json(bookings);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+            res.status(500).json({ error: 'Failed to fetch bookings.' });
+        }
+    };
+
+    updateStatus = async (req: Request, res: Response): Promise<void> => {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['pending', 'confirmed', 'rejected', 'converted'].includes(status)) {
+             res.status(400).json({ error: 'Invalid status provided.' });
+             return;
+        }
+
+        try {
+            const result = await websiteBookingService.updateBookingStatus(Number(id), status);
+            res.json(result);
+        } catch (error) {
+            console.error('Error updating booking status:', error);
+            res.status(500).json({ error: 'Failed to update status.' });
+        }
+    };
+
+    sendReminder = async (req: Request, res: Response): Promise<void> => {
+        const { id } = req.params;
+        try {
+            const result = await websiteBookingService.sendManualReminder(Number(id));
+            res.json(result);
+        } catch (error: any) {
+            console.error('Error sending reminder:', error);
+            res.status(500).json({ error: error.message || 'Failed to send reminder email.' });
+        }
+    };
+}
+
+export const websiteBookingController = new WebsiteBookingController();

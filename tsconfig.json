@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2020",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Modules */
+    "module": "commonjs",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /* Emit */
+    "outDir": "./dist",
+    "removeComments": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* --- RELAXED TYPE CHECKING (The Fix) --- */
+    "strict": false,                       /* Disables strict mode. */
+    "noImplicitAny": false,                /* Allows 'any' types. */
+    "strictNullChecks": true,              /* MUST BE TRUE FOR DRIZZLE ORM */
+    "strictPropertyInitialization": false, /* Stops complaining about class properties. */
+    
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}

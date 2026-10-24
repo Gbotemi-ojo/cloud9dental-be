@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Cloud9 Dental Clinic</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 20px; background-color: #f8fafc; }
+        .container { max-width: 650px; margin: 20px auto; background: #fff; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-top: 5px solid #0284c7; }
+        h1, h2 { color: #0284c7; text-align: center; margin-top: 0; }
+        .header, .footer { text-align: center; margin-bottom: 20px; color: #64748b; }
+        .header strong { font-size: 1.3em; color: #0f172a; }
+        .details-section { margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+        .details-section p { margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; }
+        th { background-color: #f1f5f9; color: #334155; font-weight: 600; }
+        .note { font-size: 0.85em; color: #475569; margin-top: 15px; padding: 12px; background-color: #f0f9ff; border-left: 3px solid #0284c7; border-radius: 4px; }
+        .total-due-row { font-size: 1.2em; font-weight: bold; color: #0284c7; }
+        .footer { font-size: 0.9em; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Official Invoice</h1>
+            <p><strong>Cloud9 Dental Clinic</strong></p>
+            <p>52 Old Yaba Road, Adekunle Bus Stop, Yaba</p>
+            <p>Phone: 08131556102 | Email: c9dclinic@gmail.com</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 15px;">
+        </div>
+
+        <div class="details-section">
+            <h2>Invoice Details</h2>
+            <p><strong>Invoice Number:</strong> {{invoiceNumber}}</p>
+            <p><strong>Date:</strong> {{invoiceDate}}</p>
+            <p><strong>Patient Name:</strong> {{patientName}}</p>
+            {{#if isHmoCovered}}
+            <p><strong>HMO Provider:</strong> {{hmoName}}</p>
+            {{/if}}
+        </div>
+
+        <div class="details-section">
+            <h2>Services Provided</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        {{#unless isHmoCovered}}
+                        <th>Amount (₦)</th>
+                        {{/unless}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each services}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        {{#unless ../isHmoCovered}}
+                        <td>{{this.totalPrice}}</td>
+                        {{/unless}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        {{#unless isHmoCovered}}
+        <div class="details-section">
+            <h2>Payment Summary</h2>
+            <p><strong>Subtotal:</strong> ₦{{subtotal}}</p>
+            <p class="total-due-row">
+                <strong>Total Amount Due from Patient:</strong> ₦{{totalDue}}
+            </p>
+        </div>
+        {{/unless}}
+
+        {{#if latestDentalRecord}}
+        <div class="note">
+            <h3>Related Treatment Context:</h3>
+            <p><strong>Provisional Diagnosis:</strong> {{latestDentalRecord.provisionalDiagnosis}}</p>
+            <p><strong>Treatment Plan:</strong> {{latestDentalRecord.treatmentPlan}}</p>
+        </div>
+        {{/if}}
+
+        <div class="footer">
+            <p>Thank you for choosing Cloud9 Dental Clinic!</p>
+            <p>For any complaint or inquiry, message or call the clinic on WhatsApp: <strong>08131556102</strong></p>
+        </div>
+    </div>
+</body>
+</html>
