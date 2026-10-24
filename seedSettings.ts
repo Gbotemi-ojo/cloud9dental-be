@@ -4,7 +4,7 @@ import { createPool } from 'mysql2/promise';
 import * as schema from './db/schema'; // Assuming schema.ts is in the same directory
 import { settings } from './db/schema'; // Import the specific settings table
 import { eq } from 'drizzle-orm';
-
+// Define the name of the settings entry we want to seed
 const SETTINGS_NAME = 'dashboardPermissions';
 
 async function seedSettings() {
